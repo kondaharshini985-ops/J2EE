@@ -1,43 +1,67 @@
+package com.pac;
+
+import java.sql.Connection;
+import java.sql.Driver;
 import java.sql.DriverManager;
-import java.sql.*;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.Scanner;
 
-public class Temparory {
 
-		public static void main(String [] args) {
-			String url="jdbc:mysql://localhost:3306/student";
-			String user="root";
-			String password="root";
-			Connection con= null;
-			Statement stmt=null;
-			//String query="INSERT INTO STUDENT VALUES(198,8397905190,'Harsha','haha@gmail.com','karimnar','karimnagar',1534,'2025-11-12')";
-			String query1="select * from student";
-			Scanner sc = new Scanner(System.in);
-			System.out.println("Enter the query");
-			String query2 = sc.nextLine();
-			
-			
-		
-			try {
-				System.out.println("load and register the driver");
-				Class.forName("com.mysql.cj.jdbc.Driver");
-				 con = DriverManager.getConnection(url,user,password);
-				System.out.println("connection established");
-				stmt = con.createStatement();
-				System.out.println("Platform created");
-				boolean res =stmt.execute(query1);
-				//int  result =stmt.executeUpdate(query);
-				
-				//System.out.println(result);
-				System.out.println(res);
-				boolean b =stmt.execute(query2);
-				System.out.print(b);
-			}
-			catch(Exception e) {
-				
-			e.printStackTrace();
-		}
+public class Trial {
+
+public static void main(String[] args) {
+	String url="jdbc:mysql://localhost:3306/employee";
+	String username ="root";
+	String password ="root";
+	Connection conn = null;
+	Scanner sc = new Scanner(System.in);
+	ResultSet rSet=null;
+	while(true) {
+	System.out.println("Enter the name: ");
 	
+	
+	String name = sc.next();
+  
+	System.out.println("Enter the city : ");
+	String city =sc.next();
+	System.out.println("Enter the sal: ");
+	long sal = sc.nextLong();	
+	if(sal==0) {
+		break;
+	}
+	String query ="insert into emp(empid,name,city,sal) values(0,?,?,?)";
+	String query2 ="select * from emp";
+	PreparedStatement ps =null;
+	
+	try {
+	 Class.forName("com.mysql.cj.jdbc.Driver");
+	 conn=DriverManager.getConnection(url,username,password);
+	 ps=conn.prepareStatement(query);
+	 ps.setString(1, name);
+	 ps.setString(2, city);
+	 ps.setLong(3, sal);
+	 
+	 int res =ps.executeUpdate();
+	 System.out.println(res);
+	 rSet=ps.executeQuery(query2);
+	 
+	 while(rSet.next()) {
+		 System.out.println(rSet.getString("name"));
+		 System.out.println(rSet.getString("city"));
+		 System.out.println(rSet.getLong("sal"));
+	 }
+	// System.out.println(ps.getStriing("name"));
+	 //System.out.println(ps.getString("city"));
+	 //System.out.println(ps.getLong("sal"));
+	 
+	 
+			 
+	}catch (Exception e) {
+		e.printStackTrace();
+	}
+	}
+	
+}
 
 }
-} 
